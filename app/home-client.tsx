@@ -117,10 +117,10 @@ export default function HomeClient({ images }: { images: string[] }) {
   }
 
   return (
-    <main className="min-h-screen bg-white flex flex-col px-6 pt-10 pb-8 text-sm">
+<main className="min-h-screen bg-white flex flex-col px-5 py-6 text-sm max-w-md mx-auto">
       {/* HEADER */}
-      <div className="text-center">
-        <h1 className="text-3xl font-medium tracking-tight">
+      <div className="text-center mb-3">
+  <h1 className="text-2xl font-medium tracking-tight">
           Side Two Café
         </h1>
 
