@@ -145,7 +145,7 @@ export default function HomeClient({ images }: { images: string[] }) {
 
       {/* HEADER */}
       <div className="text-center leading-tight">
-       <h1 className="text-5xl font-medium tracking-tight pt-6">
+       <h1 className="text-5xl font-medium tracking-tight pt-14">
   Side Two Café
 </h1>
         <p className="text-zinc-500 text-[16px] mt-1">
