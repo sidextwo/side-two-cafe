@@ -5,7 +5,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 console.log("RESEND KEY:", !!process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
-  try {
+  console.log("🔥 ROUTE HIT - NEW VERSION 2026");
+  
+    try {
     const body = await req.json();
 
     const { customerName, order, notes, readyIn } = body;
