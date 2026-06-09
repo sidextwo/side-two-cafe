@@ -104,7 +104,7 @@ export default function HomeClient({ images }: { images: string[] }) {
   }
 
   return (
-  <main className="min-h-dvh bg-white flex justify-center px-5 py-6 text-[11px]">
+  <main className="w-full border rounded-lg p-3 text-base text-center">
 
     {/* APP SHELL */}
     <div className="w-full max-w-[420px] flex flex-col gap-5 pb-12">
@@ -139,8 +139,7 @@ export default function HomeClient({ images }: { images: string[] }) {
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Your name"
-                className="w-full border rounded-lg p-2 text-[11px] text-center"
-              />
+                className="w-full border rounded-lg p-3 text-base text-center"              />
             </div>
           </div>
 
