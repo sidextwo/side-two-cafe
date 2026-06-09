@@ -40,7 +40,11 @@ Notes:
 ${notes || "None"}
 
 Submitted:
-${new Date().toLocaleString()}
+${new Date().toLocaleString("en-US", {
+  timeZone: "America/New_York",
+  dateStyle: "medium",
+  timeStyle: "short",
+})}
       `,
     });
 

@@ -22,7 +22,7 @@ type Temp = "Hot" | "Iced";
 
 export default function HomeClient({ images }: { images: string[] }) {
   const [step, setStep] = useState<"home" | "category" | "drink">("home");
-  
+
   const [category, setCategory] = useState<Category | null>(null);
   const [drink, setDrink] = useState<string | null>(null);
   const [temp, setTemp] = useState<Temp | null>(null);
@@ -56,21 +56,15 @@ export default function HomeClient({ images }: { images: string[] }) {
 
   function isDisabled(option: string) {
     if (!temp) return true;
-
     if (option === "Soda" && temp === "Hot") return true;
     if (option === "Diesel (Tea Only)" && category !== "Matcha") return true;
-
     return false;
   }
 
   function addToOrder() {
-    if (!category || !drink || !temp) {
-      alert("Select Hot/Iced and a drink");
-      return;
-    }
+    if (!category || !drink || !temp) return;
 
     const item = `${temp} ${drink} (${category})`;
-
     setOrder((prev) => [...prev, item]);
 
     resetSelection();
@@ -82,122 +76,111 @@ export default function HomeClient({ images }: { images: string[] }) {
   }
 
   async function submitOrder() {
-  if (!customerName.trim()) {
-    alert("Please enter your name.");
-    return;
-  }
+    if (!customerName.trim() || !order.length || !readyIn) return;
 
-  if (!order.length) {
-    alert("Add at least one drink.");
-    return;
-  }
-
-  if (!readyIn) {
-    alert("Please select when you'd like the order ready.");
-    return;
-  }
-
-    console.log("CUSTOMER NAME:", customerName);
     const res = await fetch("/api/order", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         customerName,
         order,
         notes,
         readyIn,
-    }),
+      }),
     });
 
     const data = await res.json();
 
     if (data.success) {
-      alert("Order sent ☕");
-    setCategory(null);
-      setDrink(null);
-      setTemp(null);
       setOrder([]);
       setCustomerName("");
       setNotes("");
       setReadyIn("");
-
+      setCategory(null);
+      setDrink(null);
+      setTemp(null);
       setStep("home");
     }
   }
 
   return (
-<main className="min-h-screen bg-white flex flex-col px-5 py-6 text-sm max-w-md mx-auto">
-      {/* HEADER */}
-      <div className="text-center mb-3">
-  <h1 className="text-2xl font-medium tracking-tight">
-          Side Two Café
-        </h1>
+  <main className="min-h-dvh bg-white flex justify-center px-3 py-4 text-[11px]">
 
-        <p className="text-zinc-500 mt-1 text-xs">
+    {/* APP SHELL */}
+    <div className="w-full max-w-[290px] flex flex-col gap-4 pb-12">
+
+      {/* HEADER */}
+      <div className="text-center leading-tight">
+       <h1 className="text-2xl font-medium tracking-tight">
+  Side Two Café
+</h1>
+        <p className="text-zinc-500 text-[10px] mt-1">
           Get a special little drink
         </p>
       </div>
 
       {/* HOME */}
-{step === "home" && (
-  <>
-    <div className="flex-1 flex flex-col items-center justify-center gap-4">
-      <div className="w-40 h-60 overflow-hidden rounded-2xl bg-zinc-100">
-        {randomImage && (
-          <img
-            src={randomImage}
-            className="w-full h-full object-cover"
-            alt="Coffee"
-          />
-        )}
-      </div>
+      {step === "home" && (
+        <>
+          <div className="flex flex-col items-center gap-4">
 
-      <input
-        type="text"
-        value={customerName}
-        onChange={(e) => setCustomerName(e.target.value)}
-        placeholder="Your name"
-        className="w-full border rounded-2xl p-3 text-sm outline-none"
-      />
-    </div>
+            <div className="w-40 h-60 overflow-hidden rounded-lg bg-zinc-100">
+              {randomImage && (
+                <img
+                  src={randomImage}
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
 
-    <button
-      onClick={() => {
-        if (!customerName.trim()) {
-          alert("Please enter your name.");
-          return;
-        }
+            {/* NAME (NARROWER + CENTERED) */}
+            <div className="w-[70%]">
+              <input
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Your name"
+                className="w-full border rounded-lg p-2 text-[11px] text-center"
+              />
+            </div>
+          </div>
 
-        setStep("category");
-      }}
-      className="w-full py-4 bg-orange-500 text-white rounded-2xl"
-    >
-      ☕ Start Order
-    </button>
-  </>
-)}
+          <div className="flex justify-center mt-4">
+  <button
+    onClick={() => {
+      if (!customerName.trim()) return;
+      setStep("category");
+    }}
+    className="w-[70%] py-2.5 bg-orange-500 text-white rounded-lg"
+  >
+    Start
+  </button>
+</div>
+        </>
+      )}
 
       {/* CATEGORY */}
       {step === "category" && (
-        <div className="flex-1 flex flex-col gap-3 mt-6">
-          {Object.keys(menu).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => {
-                setCategory(cat as Category);
-                setStep("drink");
-              }}
-              className="w-full py-4 border rounded-2xl"
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="flex flex-col items-center gap-3">
+
+          {/* CATEGORY CARDS */}
+          <div className="w-[70%] flex flex-col gap-2">
+            {Object.keys(menu).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setCategory(cat as Category);
+                  setStep("drink");
+                }}
+                className="py-2 border rounded-lg"
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
 
           <button
             onClick={() => setStep("home")}
-            className="text-xs text-zinc-500 mt-4"
+            className="text-[10px] text-zinc-500 mt-2"
           >
             ← Back
           </button>
@@ -206,15 +189,16 @@ export default function HomeClient({ images }: { images: string[] }) {
 
       {/* DRINK */}
       {step === "drink" && category && (
-        <div className="flex-1 flex flex-col gap-4 mt-6">
+        <div className="flex flex-col items-center gap-4">
+
           {/* HOT / ICED */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-[70%]">
             <button
               onClick={() => setTemp("Hot")}
-              className={`flex-1 py-3 border rounded-2xl transition ${
+              className={`flex-1 py-2 border rounded-lg ${
                 temp === "Hot"
-                  ? "bg-red-100 border-red-300 text-red-700"
-                  : "bg-red-50 border-red-100 text-red-600"
+                  ? "bg-red-100 border-red-300"
+                  : "bg-red-50"
               }`}
             >
               Hot
@@ -222,27 +206,25 @@ export default function HomeClient({ images }: { images: string[] }) {
 
             <button
               onClick={() => setTemp("Iced")}
-              className={`flex-1 py-3 border rounded-2xl transition ${
+              className={`flex-1 py-2 border rounded-lg ${
                 temp === "Iced"
-                  ? "bg-blue-100 border-blue-300 text-blue-700"
-                  : "bg-blue-50 border-blue-100 text-blue-600"
+                  ? "bg-blue-100 border-blue-300"
+                  : "bg-blue-50"
               }`}
             >
               Iced
             </button>
           </div>
 
-          {/* DRINK OPTIONS */}
-          <div className="flex flex-col gap-2">
+          {/* DRINKS (NARROW + MORE SPACING) */}
+          <div className="w-[70%] flex flex-col gap-2">
             {menu[category].map((item) => (
               <button
                 key={item}
                 disabled={!temp || isDisabled(item)}
                 onClick={() => setDrink(item)}
-                className={`w-full py-3 border rounded-2xl transition ${
-                  drink === item
-                    ? "bg-orange-500 text-white"
-                    : ""
+                className={`py-2 border rounded-lg ${
+                  drink === item ? "bg-orange-500 text-white" : ""
                 } ${!temp || isDisabled(item) ? "opacity-30" : ""}`}
               >
                 {item}
@@ -250,64 +232,49 @@ export default function HomeClient({ images }: { images: string[] }) {
             ))}
           </div>
 
-          {/* ADD */}
           <button
             onClick={addToOrder}
-            className="w-full mt-auto py-4 bg-green-500 text-white rounded-2xl"
+            className="w-[70%] self-center py-2.5 bg-green-500 text-white rounded-lg mt-2"
           >
-            Add to Order
+            Add
           </button>
 
           <button
             onClick={() => setStep("category")}
-            className="text-xs text-zinc-500"
+            className="text-[10px] text-zinc-500"
           >
             ← Back
           </button>
         </div>
       )}
 
-      {/* ORDER SUMMARY */}
+      {/* ORDER */}
       {order.length > 0 && (
-        <div className="mt-6 text-xs text-zinc-500">
-            
-          <p className="mb-2">Your Order:</p>
+        <div className="flex flex-col gap-4 text-[10px] text-zinc-600">
 
-          {order.map((o, i) => (
-  <div
-    key={i}
-    className="flex justify-between items-center py-1"
-  >
-    <span>{o}</span>
+          {/* ORDER LIST */}
+          <div className="w-[70%] self-center flex flex-col gap-1.5">
+            <p className="mb-1">Your Order</p>
 
-    <button
-      onClick={() => removeItem(i)}
-      className="text-red-400 text-xs"
-    >
-      remove
-    </button>
-  </div>
-))}
+            {order.map((o, i) => (
+              <div key={i} className="flex justify-between">
+                <span>{o}</span>
+                <button onClick={() => removeItem(i)}>x</button>
+              </div>
+            ))}
+          </div>
 
-{/* READY IN */}
-<div className="mt-5">
-  <p className="mb-2 text-xs text-zinc-500">
-    When should it be ready?
-  </p>
+          {/* READY */}
+          <div className="w-[70%] self-center flex flex-col gap-2">
+            <p>Ready</p>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {readyOptions.map((option) => (
                 <button
                   key={option}
                   onClick={() => setReadyIn(option)}
-                  className={`px-3 py-2 rounded-full border text-xs transition ${
-                    readyIn === option
-                      ? option === "ASAP"
-                        ? "bg-orange-100 border-orange-300 text-orange-700"
-                        : "bg-zinc-100 border-zinc-300 text-zinc-900"
-                      : option === "ASAP"
-                      ? "bg-orange-50 border-orange-100 text-orange-600"
-                      : "bg-white border-zinc-200 text-zinc-600"
+                  className={`px-2 py-1 border rounded-full ${
+                    readyIn === option ? "bg-zinc-200" : ""
                   }`}
                 >
                   {option}
@@ -317,28 +284,24 @@ export default function HomeClient({ images }: { images: string[] }) {
           </div>
 
           {/* NOTES */}
-          <div className="mt-4">
-            <p className="mb-1 text-xs text-zinc-500">
-              Notes (optional)
-            </p>
-
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. extra shot, less ice, oat milk..."
-              className="w-full border rounded-2xl p-3 text-xs outline-none"
-              rows={3}
-            />
-          </div>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Notes"
+            className="w-[70%] self-center border rounded-lg p-2 text-[11px]"
+            rows={2}
+          />
 
           <button
             onClick={submitOrder}
-            className="w-full mt-4 py-4 bg-black text-white rounded-2xl"
+            className="w-[70%] self-center py-2.5 bg-black text-white rounded-lg mt-2"
           >
-            Send Order ☕
+            Send
           </button>
         </div>
       )}
-    </main>
-  );
+
+    </div>
+  </main>
+);
 }
