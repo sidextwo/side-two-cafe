@@ -107,7 +107,7 @@ export default function HomeClient({ images }: { images: string[] }) {
   <main className="w-full border rounded-lg p-3 text-base text-center">
 
     {/* APP SHELL */}
-    <div className="w-full max-w-[420px] flex flex-col gap-5 pb-12">
+    <div className="w-full max-w-[420px] flex flex-col gap-8 pb-12">
 
       {/* HEADER */}
       <div className="text-center leading-tight">
@@ -122,7 +122,7 @@ export default function HomeClient({ images }: { images: string[] }) {
       {/* HOME */}
       {step === "home" && (
         <>
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-8">
 
             <div className="w-50 h-60 overflow-hidden rounded-lg bg-zinc-100">
               {randomImage && (
