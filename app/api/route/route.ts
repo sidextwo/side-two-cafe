@@ -5,9 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 console.log("RESEND KEY:", !!process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
-  console.log("🔥 ROUTE HIT - NEW VERSION 2026");
-  
-    try {
+  try {
     const body = await req.json();
 
     const { customerName, order, notes, readyIn } = body;
@@ -28,7 +26,7 @@ export async function POST(req: Request) {
       to: ["sidextwo@gmail.com"], // change if needed
       subject: `☕ ${customerName} ordered coffee`,
       text: `
-SIDE TWO CAFÉ ORDER - TEST TEST
+SIDE TWO CAFÉ ORDER
 
 Name: ${customerName}
 
