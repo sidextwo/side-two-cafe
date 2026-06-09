@@ -10,6 +10,12 @@ const lekton = Lekton({
 export const metadata: Metadata = {
   title: "Side Two Café",
   description: "Coffee ordering app",
+
+  // ✅ THIS FIXES MOBILE SCALING
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
 };
 
 export default function RootLayout({
