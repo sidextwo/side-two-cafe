@@ -22,12 +22,13 @@ type Temp = "Hot" | "Iced";
 
 export default function HomeClient({ images }: { images: string[] }) {
   const [step, setStep] = useState<"home" | "category" | "drink">("home");
-
+  
   const [category, setCategory] = useState<Category | null>(null);
   const [drink, setDrink] = useState<string | null>(null);
   const [temp, setTemp] = useState<Temp | null>(null);
 
   const [order, setOrder] = useState<string[]>([]);
+  const [customerName, setCustomerName] = useState("");
   const [notes, setNotes] = useState("");
   const [readyIn, setReadyIn] = useState("");
 
@@ -81,34 +82,44 @@ export default function HomeClient({ images }: { images: string[] }) {
   }
 
   async function submitOrder() {
-    if (!order.length) {
-      alert("Add at least one drink.");
-      return;
-    }
+  if (!customerName.trim()) {
+    alert("Please enter your name.");
+    return;
+  }
 
-    if (!readyIn) {
-      alert("Please select when you'd like the order ready.");
-      return;
-    }
+  if (!order.length) {
+    alert("Add at least one drink.");
+    return;
+  }
 
+  if (!readyIn) {
+    alert("Please select when you'd like the order ready.");
+    return;
+  }
+
+    console.log("CUSTOMER NAME:", customerName);
     const res = await fetch("/api/order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        customerName,
         order,
         notes,
         readyIn,
-      }),
+    }),
     });
 
     const data = await res.json();
 
     if (data.success) {
       alert("Order sent ☕");
-
+    setCategory(null);
+      setDrink(null);
+      setTemp(null);
       setOrder([]);
+      setCustomerName("");
       setNotes("");
       setReadyIn("");
 
@@ -130,28 +141,43 @@ export default function HomeClient({ images }: { images: string[] }) {
       </div>
 
       {/* HOME */}
-      {step === "home" && (
-        <>
-          <div className="flex-1 flex items-center justify-center">
-            <div className="w-40 h-60 overflow-hidden rounded-2xl bg-zinc-100">
-              {randomImage && (
-                <img
-                  src={randomImage}
-                  className="w-full h-full object-cover"
-                  alt="Coffee"
-                />
-              )}
-            </div>
-          </div>
+{step === "home" && (
+  <>
+    <div className="flex-1 flex flex-col items-center justify-center gap-4">
+      <div className="w-40 h-60 overflow-hidden rounded-2xl bg-zinc-100">
+        {randomImage && (
+          <img
+            src={randomImage}
+            className="w-full h-full object-cover"
+            alt="Coffee"
+          />
+        )}
+      </div>
 
-          <button
-            onClick={() => setStep("category")}
-            className="w-full py-4 bg-orange-500 text-white rounded-2xl"
-          >
-            ☕ Start Order
-          </button>
-        </>
-      )}
+      <input
+        type="text"
+        value={customerName}
+        onChange={(e) => setCustomerName(e.target.value)}
+        placeholder="Your name"
+        className="w-full border rounded-2xl p-3 text-sm outline-none"
+      />
+    </div>
+
+    <button
+      onClick={() => {
+        if (!customerName.trim()) {
+          alert("Please enter your name.");
+          return;
+        }
+
+        setStep("category");
+      }}
+      className="w-full py-4 bg-orange-500 text-white rounded-2xl"
+    >
+      ☕ Start Order
+    </button>
+  </>
+)}
 
       {/* CATEGORY */}
       {step === "category" && (
@@ -244,29 +270,30 @@ export default function HomeClient({ images }: { images: string[] }) {
       {/* ORDER SUMMARY */}
       {order.length > 0 && (
         <div className="mt-6 text-xs text-zinc-500">
+            
           <p className="mb-2">Your Order:</p>
 
           {order.map((o, i) => (
-            <div
-              key={i}
-              className="flex justify-between items-center py-1"
-            >
-              <span>{o}</span>
+  <div
+    key={i}
+    className="flex justify-between items-center py-1"
+  >
+    <span>{o}</span>
 
-              <button
-                onClick={() => removeItem(i)}
-                className="text-red-400 text-xs"
-              >
-                remove
-              </button>
-            </div>
-          ))}
+    <button
+      onClick={() => removeItem(i)}
+      className="text-red-400 text-xs"
+    >
+      remove
+    </button>
+  </div>
+))}
 
-          {/* READY IN */}
-          <div className="mt-5">
-            <p className="mb-2 text-xs text-zinc-500">
-              When should it be ready?
-            </p>
+{/* READY IN */}
+<div className="mt-5">
+  <p className="mb-2 text-xs text-zinc-500">
+    When should it be ready?
+  </p>
 
             <div className="flex flex-wrap gap-2">
               {readyOptions.map((option) => (
