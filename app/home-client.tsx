@@ -71,6 +71,40 @@ export default function HomeClient({ images }: { images: string[] }) {
     setStep("category");
   }
 
+  function surpriseMe() {
+  if (!customerName.trim()) {
+    alert("Please enter your name.");
+    return;
+  }
+
+  const categories = Object.keys(menu) as Category[];
+
+  const randomCategory =
+    categories[Math.floor(Math.random() * categories.length)];
+
+  const randomTemp: Temp =
+    Math.random() > 0.5 ? "Hot" : "Iced";
+
+  const validDrinks = menu[randomCategory].filter((item) => {
+    if (item === "Soda" && randomTemp === "Hot") return false;
+    return true;
+  });
+
+  const randomDrink =
+    validDrinks[Math.floor(Math.random() * validDrinks.length)];
+
+  const item = `${randomTemp} ${randomDrink} (${randomCategory})`;
+
+  setOrder([item]);
+
+  setCategory(null);
+  setDrink(null);
+  setTemp(null);
+
+  // Jump into ordering flow
+  setStep("category");
+}
+
   function removeItem(index: number) {
     setOrder((prev) => prev.filter((_, i) => i !== index));
   }
@@ -124,7 +158,9 @@ export default function HomeClient({ images }: { images: string[] }) {
         <>
           <div className="flex flex-col items-center gap-8">
 
-            <div className="w-50 h-60 overflow-hidden rounded-lg bg-zinc-100">
+            <div className="w-50 h-60 overflow-hidden rounded-lg bg-zinc-100"
+              onClick={surpriseMe}
+>
               {randomImage && (
                 <img
                   src={randomImage}
@@ -132,6 +168,9 @@ export default function HomeClient({ images }: { images: string[] }) {
                 />
               )}
             </div>
+            <p className="text-[10px] text-zinc-400 text-center -mt-8">
+  live más
+</p>
 
             {/* NAME (NARROWER + CENTERED) */}
             <div className="w-[70%]">

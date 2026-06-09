@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Lekton } from "next/font/google";
 import "./globals.css";
 
@@ -10,12 +10,15 @@ const lekton = Lekton({
 export const metadata: Metadata = {
   title: "Side Two Café",
   description: "Coffee ordering app",
-
-  // ✅ THIS FIXES MOBILE SCALING
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
+  manifest: "/manifest.json",
+  icons: {
+    apple: "/icon-512.png",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
