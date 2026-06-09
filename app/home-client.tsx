@@ -104,14 +104,14 @@ export default function HomeClient({ images }: { images: string[] }) {
   }
 
   return (
-  <main className="min-h-dvh bg-white flex justify-center px-3 py-4 text-[11px]">
+  <main className="min-h-dvh bg-white flex justify-center px-5 py-6 text-[11px]">
 
     {/* APP SHELL */}
-    <div className="w-full max-w-[290px] flex flex-col gap-4 pb-12">
+    <div className="w-full max-w-[420px] flex flex-col gap-5 pb-12">
 
       {/* HEADER */}
       <div className="text-center leading-tight">
-       <h1 className="text-2xl font-medium tracking-tight">
+       <h1 className="text-3xl font-medium tracking-tight">
   Side Two Café
 </h1>
         <p className="text-zinc-500 text-[10px] mt-1">
@@ -124,7 +124,7 @@ export default function HomeClient({ images }: { images: string[] }) {
         <>
           <div className="flex flex-col items-center gap-4">
 
-            <div className="w-40 h-60 overflow-hidden rounded-lg bg-zinc-100">
+            <div className="w-50 h-60 overflow-hidden rounded-lg bg-zinc-100">
               {randomImage && (
                 <img
                   src={randomImage}
@@ -144,7 +144,7 @@ export default function HomeClient({ images }: { images: string[] }) {
             </div>
           </div>
 
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-1">
   <button
     onClick={() => {
       if (!customerName.trim()) return;
@@ -160,10 +160,10 @@ export default function HomeClient({ images }: { images: string[] }) {
 
       {/* CATEGORY */}
       {step === "category" && (
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-4">
 
           {/* CATEGORY CARDS */}
-          <div className="w-[70%] flex flex-col gap-2">
+          <div className="w-[70%] flex flex-col gap-5">
             {Object.keys(menu).map((cat) => (
               <button
                 key={cat}
@@ -189,10 +189,10 @@ export default function HomeClient({ images }: { images: string[] }) {
 
       {/* DRINK */}
       {step === "drink" && category && (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-5">
 
           {/* HOT / ICED */}
-          <div className="flex gap-2 w-[70%]">
+          <div className="flex gap-3 w-[70%]">
             <button
               onClick={() => setTemp("Hot")}
               className={`flex-1 py-2 border rounded-lg ${
@@ -217,7 +217,7 @@ export default function HomeClient({ images }: { images: string[] }) {
           </div>
 
           {/* DRINKS (NARROW + MORE SPACING) */}
-          <div className="w-[70%] flex flex-col gap-2">
+          <div className="w-[70%] flex flex-col gap-4">
             {menu[category].map((item) => (
               <button
                 key={item}
@@ -250,10 +250,10 @@ export default function HomeClient({ images }: { images: string[] }) {
 
       {/* ORDER */}
       {order.length > 0 && (
-        <div className="flex flex-col gap-4 text-[10px] text-zinc-600">
+        <div className="flex flex-col gap-5 text-[10px] text-zinc-600">
 
           {/* ORDER LIST */}
-          <div className="w-[70%] self-center flex flex-col gap-1.5">
+          <div className="w-[70%] self-center flex flex-col gap-2">
             <p className="mb-1">Your Order</p>
 
             {order.map((o, i) => (
