@@ -138,14 +138,14 @@ export default function HomeClient({ images }: { images: string[] }) {
   }
 
   return (
-  <main className="w-full border rounded-lg p-3 text-base text-center">
+  <main className="w-full text-base text-center">
 
     {/* APP SHELL */}
     <div className="w-full max-w-[420px] flex flex-col gap-8 pb-12">
 
       {/* HEADER */}
       <div className="text-center leading-tight">
-       <h1 className="text-5xl font-medium tracking-tight">
+       <h1 className="text-5xl font-medium tracking-tight pt-6">
   Side Two Café
 </h1>
         <p className="text-zinc-500 text-[16px] mt-1">
@@ -154,9 +154,9 @@ export default function HomeClient({ images }: { images: string[] }) {
       </div>
 
       {/* HOME */}
-      {step === "home" && (
-        <>
-          <div className="flex flex-col items-center gap-8">
+     {step === "home" && (
+  <>
+    <div className="flex-1 flex flex-col items-center justify-center gap-8 pt-2">
 
             <div className="w-50 h-60 overflow-hidden rounded-lg bg-zinc-100"
               onClick={surpriseMe}
