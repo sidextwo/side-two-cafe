@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       to: ["sidextwo@gmail.com"], // change if needed
       subject: `☕ ${customerName} ordered coffee`,
       text: `
-SIDE TWO CAFÉ ORDER
+SIDE TWO CAFÉ ORDER - TEST TEST
 
 Name: ${customerName}
 
