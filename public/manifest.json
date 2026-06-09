@@ -1,6 +1,6 @@
 {
   "name": "Side Two Café",
-  "short_name": "Side Two",
+  "short_name": "Side Two Café",
   "description": "Coffee ordering app",
   "start_url": "/",
   "display": "standalone",
