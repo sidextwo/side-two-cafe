@@ -31,7 +31,7 @@ export default function HomeClient({ images }: { images: string[] }) {
   const [customerName, setCustomerName] = useState("");
   const [notes, setNotes] = useState("");
   const [readyIn, setReadyIn] = useState("");
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const readyOptions = [
     "ASAP",
     "10 min",
@@ -109,12 +109,19 @@ export default function HomeClient({ images }: { images: string[] }) {
     setOrder((prev) => prev.filter((_, i) => i !== index));
   }
 
-  async function submitOrder() {
-    if (!customerName.trim() || !order.length || !readyIn) return;
+async function submitOrder() {
+  if (isSubmitting) return;
 
+  if (!customerName.trim() || !order.length || !readyIn) return;
+
+  setIsSubmitting(true);
+
+  try {
     const res = await fetch("/api/order", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         customerName,
         order,
@@ -126,6 +133,8 @@ export default function HomeClient({ images }: { images: string[] }) {
     const data = await res.json();
 
     if (data.success) {
+      alert("Order sent ☕");
+
       setOrder([]);
       setCustomerName("");
       setNotes("");
@@ -134,8 +143,16 @@ export default function HomeClient({ images }: { images: string[] }) {
       setDrink(null);
       setTemp(null);
       setStep("home");
+    } else {
+      alert("Failed to send order.");
     }
+  } catch (error) {
+    console.error(error);
+    alert("Failed to send order.");
+  } finally {
+    setIsSubmitting(false);
   }
+}
 
   return (
   <main className="w-full text-base text-center">
@@ -331,11 +348,16 @@ export default function HomeClient({ images }: { images: string[] }) {
           />
 
           <button
-            onClick={submitOrder}
-            className="w-[70%] self-center py-2.5 bg-black text-white rounded-lg mt-2"
-          >
-            Send
-          </button>
+  onClick={submitOrder}
+  disabled={isSubmitting}
+  className={`w-[70%] self-center py-2.5 rounded-lg mt-2 text-white transition ${
+    isSubmitting
+      ? "bg-zinc-400 cursor-not-allowed"
+      : "bg-black"
+  }`}
+>
+  {isSubmitting ? "Sending..." : "Send"}
+</button>
         </div>
       )}
 
